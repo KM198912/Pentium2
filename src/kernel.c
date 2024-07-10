@@ -5,6 +5,7 @@
 #include <flanterm/flanterm.h>
 #include <flanterm/backends/fb.h>
 #include <lib/printf.h>
+#include <interrupts/gdt.h>
 struct flanterm_context *ft_ctx = NULL;
 void outb(uint16_t port, uint8_t val)
 {
@@ -34,7 +35,10 @@ void enable_sse() {
     asm volatile ("mov %0, %%cr4" : : "r"(cr4));
 }
 
-
+void test_user_function() {
+    for(;;);
+}
+extern void jump_usermode();
 void kernel_entry(uintptr_t stack_top, uintptr_t stack_bottom,
 						multiboot_info_t* mboot, uint32_t magic) 
 {
@@ -65,6 +69,11 @@ void kernel_entry(uintptr_t stack_top, uintptr_t stack_bottom,
         0
     );
     printf("NexusOS Booting...\n");
+    enable_sse();
+    printf("SSE Enabled\n");
+    gdt_init();
+    printf("GDT Initialized\n");
+    jump_usermode();
     while (1) {
         asm volatile ("hlt");
     }
