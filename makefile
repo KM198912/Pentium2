@@ -30,7 +30,7 @@ clean:
 	rm -f $(OBJFILES) kernel.bin
 
 run: kernel.bin
-	qemu-system-i386 -cdrom myos.iso -serial stdio	
+	qemu-system-i386 -m 2G -cdrom myos.iso -serial stdio	
 
 isofile:
 	mkdir -p isodir/boot/grub

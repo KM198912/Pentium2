@@ -6,6 +6,7 @@
 #include <flanterm/backends/fb.h>
 #include <lib/printf.h>
 #include <interrupts/gdt.h>
+#include <mm/pmm.h>
 struct flanterm_context *ft_ctx = NULL;
 void outb(uint16_t port, uint8_t val)
 {
@@ -73,6 +74,8 @@ void kernel_entry(uintptr_t stack_top, uintptr_t stack_bottom,
     printf("SSE Enabled\n");
     gdt_init();
     printf("GDT Initialized\n");
+    pmm_init(mboot);
+    printf("PMM Initialized\n");
     jump_usermode();
     while (1) {
         asm volatile ("hlt");
